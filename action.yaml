@@ -25,11 +25,16 @@ inputs:
     required: false
     default: "0.0.1"
 
+  chart-dirs:
+    description: "comma-separated list of dirs to look for charts"
+    required: false
+    default: "charts"
+
   # chart-testing settings
   ct-common-args:
     description: "ct common args"
     required: false
-    default: "--chart-dirs=charts --remote=origin --target-branch=main"
+    default: "--remote=origin --target-branch=main"
   ct-list-args:
     description: "ct list args"
     required: false
@@ -186,7 +191,7 @@ runs:
       id: list-changed
       shell: bash
       run: |
-        changed=$(ct list-changed ${{ inputs.ct-common-args }} ${{ inputs.ct-list-args }} ${{ inputs.ct-extra-args }})
+        changed=$(ct list-changed --chart-dirs ${{ inputs.chart-dirs }} ${{ inputs.ct-common-args }} ${{ inputs.ct-list-args }} ${{ inputs.ct-extra-args }})
         if [[ -n "$changed" ]]; then
           echo "::set-output name=changed::true"
           echo $changed > charts-changed.txt
