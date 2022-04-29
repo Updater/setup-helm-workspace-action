@@ -24,6 +24,10 @@ inputs:
     description: "helm-changelog version"
     required: false
     default: "0.0.1"
+  helm-docs-version:
+    description: "helm-docs version"
+    required: false
+    default: "1.9.1"
 
   chart-dirs:
     description: "comma-separated list of dirs to look for charts"
@@ -135,6 +139,27 @@ runs:
         tar -xzvf helm-changelog_${{ inputs.helm-changelog-version }}_linux_amd64.tar.gz
         mv helm-changelog /usr/local/bin/
         chmod +x /usr/local/bin/helm-changelog
+
+    ## helm-docs (readme generation)
+    - name: Cache helm-docs
+      uses: actions/cache@v2
+      id: cache-helm-docs
+      env:
+        cache-name: cache-helm-docs
+      with:
+        path: /usr/local/bin/helm-docs
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ steps.get-date.outputs.week }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+
+    - name: Install helm-docs
+      if: steps.cache-helm-docs.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        curl -sLO https://github.com/norwoodj/helm-docs/releases/download/v${{ inputs.helm-changelog-version }}/helm-docs_${{ inputs.helm-docs-version }}_linux_amd64.tar.gz
+        tar -xzvf helm-docs_${{ inputs.helm-docs-version }}_linux_amd64.tar.gz
+        mv helm-docs /usr/local/bin/
+        chmod +x /usr/local/bin/helm-docs
 
     ## readme-generator-for-helm
     - name: Checkout bitnami-labs/readme-generator-for-helm
