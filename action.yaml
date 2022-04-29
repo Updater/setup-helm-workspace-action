@@ -156,7 +156,7 @@ runs:
       if: steps.cache-helm-docs.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        curl -sLO https://github.com/norwoodj/helm-docs/releases/download/v${{ inputs.helm-changelog-version }}/helm-docs_${{ inputs.helm-docs-version }}_linux_amd64.tar.gz
+        curl -sLO https://github.com/norwoodj/helm-docs/releases/download/v${{ inputs.helm-docs-version }}/helm-docs_${{ inputs.helm-docs-version }}_linux_amd64.tar.gz
         tar -xzvf helm-docs_${{ inputs.helm-docs-version }}_linux_amd64.tar.gz
         mv helm-docs /usr/local/bin/
         chmod +x /usr/local/bin/helm-docs
